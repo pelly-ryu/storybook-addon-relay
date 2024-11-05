@@ -62,7 +62,7 @@ export const withRelay = makeDecorator({
   wrapper: (getStory, context, { parameters }) => {
     const pars = parameters as WithRelayParameters<any>;
 
-    const { query, variables = {}, mockResolvers = {}, mockResolversFunc } = pars;
+    const { query, variables = {}, mockResolvers = {}, mockResolversFunc } = pars as any;
 
     if (pars.getReferenceEntries && pars.getReferenceEntry) {
       throw new Error(
