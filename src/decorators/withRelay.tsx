@@ -62,7 +62,7 @@ export const withRelay = makeDecorator({
   wrapper: (getStory, context, { parameters }) => {
     const pars = parameters as WithRelayParameters<any>;
 
-    const { query, variables = {}, mockResolvers = {} } = pars;
+    const { query, variables = {}, mockResolvers = {}, mockResolversFunc } = pars;
 
     if (pars.getReferenceEntries && pars.getReferenceEntry) {
       throw new Error(
@@ -83,10 +83,11 @@ export const withRelay = makeDecorator({
     const environment = createMockEnvironment();
 
     environment.mock.queueOperationResolver((operation) => {
+      const _mockResolvers = mockResolversFunc? mockResolversFunc(context.args) : mockResolvers
       if (pars.generateFunction) {
-        return pars.generateFunction(operation, mockResolvers);
+        return pars.generateFunction(operation, _mockResolvers);
       }
-      return MockPayloadGenerator.generate(operation, mockResolvers);
+      return MockPayloadGenerator.generate(operation, _mockResolvers);
     });
 
     environment.mock.queuePendingOperation(query, variables);
